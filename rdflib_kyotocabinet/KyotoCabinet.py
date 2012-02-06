@@ -16,8 +16,8 @@ from rdflib.store import Store
 from rdflib.store import VALID_STORE
 try:
     from kyotocabinet import DB
-except ImportError:
-    raise Exception("kyotocabinet is required but cannot be found")
+except ImportError: #pragma: NO COVER
+    raise Exception("kyotocabinet is required but cannot be found") #pragma: NO COVER
 logging.basicConfig(level=logging.ERROR,format="%(message)s")
 _logger = logging.getLogger(__name__)
 _logger.setLevel(logging.ERROR)
@@ -64,16 +64,14 @@ class KyotoCabinet(Store):
             if self.create:
                 # if not db.open(abspath(self.path) + '/' + name + ".kch", 
                 #         DB.OWRITER | DB.OCREATE | DB.OAUTOSYNC | DB.OAUTOTRAN):
-                if not db.open(abspath(self.path) + '/' + name + ".kch", 
-                        DB.OWRITER | DB.OCREATE):
-                    raise IOError("open error: " + str(db.error()))
+                if not db.open(abspath(self.path) + '/' + name + ".kch", DB.OWRITER | DB.OCREATE):
+                    raise IOError("open error: " + str(db.error()))  #pragma: NO COVER
                 return db
             else:
                 # if not db.open(abspath(self.path) + '/' + name + ".kch", 
                 #         DB.OWRITER | DB.OAUTOSYNC | DB.OAUTOTRAN):
-                if not db.open(abspath(self.path) + '/' + name + ".kch", 
-                        DB.OWRITER):
-                    raise IOError("open error: " + str(db.error()))
+                if not db.open(abspath(self.path) + '/' + name + ".kch", DB.OWRITER):  #pragma: NO COVER
+                    raise IOError("open error: " + str(db.error()))  #pragma: NO COVER
                 return db
                 
         # create and open the DBs
@@ -132,6 +130,7 @@ class KyotoCabinet(Store):
         self.__journal = NoopMethods() # was DB_RECNO mode
  
         self.__needs_sync = False
+        # # Inherited from SleepyCat, not relevant to Kyoto Cabinet
         # t = Thread(target=self.__sync_run)
         # t.setDaemon(True)
         # t.start()
@@ -142,38 +141,39 @@ class KyotoCabinet(Store):
 
         return VALID_STORE
     
-    def __sync_run(self):
-        from time import sleep, time
-        try:
-            min_seconds, max_seconds = 10, 300
-            while self.__open:
-                if self.__needs_sync:
-                    t0 = t1 = time()
-                    self.__needs_sync = False
-                    while self.__open:
-                        sleep(.1)
-                        if self.__needs_sync:
-                            t1 = time()
-                            self.__needs_sync = False
-                        if time()-t1 > min_seconds or time()-t0 > max_seconds:
-                            self.__needs_sync = False
-                            _logger.debug("sync")
-                            self.synchronize()
-                            break
-                else:
-                    sleep(1)
-        except Exception, e:
-            _logger.exception(e)
+    # # Inherited from SleepyCat, not relevant to Kyoto Cabinet
+    # def __sync_run(self):
+    #     from time import sleep, time
+    #     try:
+    #         min_seconds, max_seconds = 10, 300
+    #         while self.__open:
+    #             if self.__needs_sync:
+    #                 t0 = t1 = time()
+    #                 self.__needs_sync = False
+    #                 while self.__open:
+    #                     sleep(.1)
+    #                     if self.__needs_sync:
+    #                         t1 = time()
+    #                         self.__needs_sync = False
+    #                     if time()-t1 > min_seconds or time()-t0 > max_seconds:
+    #                         self.__needs_sync = False
+    #                         _logger.debug("sync")
+    #                         self.synchronize()
+    #                         break
+    #             else:
+    #                 sleep(1)
+    #     except Exception, e:
+    #         _logger.exception(e)
     
-    def sync(self):
-        if self.__open:
-            for i in self.__indices:
-                i.synchronize()
-            self.__contexts.synchronize()
-            self.__namespace.synchronize()
-            self.__prefix.synchronize()
-            self.__i2k.synchronize()
-            self.__k2i.synchronize()
+    # def sync(self):
+    #     if self.__open:
+    #         for i in self.__indices:
+    #             i.synchronize()
+    #         self.__contexts.synchronize()
+    #         self.__namespace.synchronize()
+    #         self.__prefix.synchronize()
+    #         self.__i2k.synchronize()
+    #         self.__k2i.synchronize()
     
     def close(self, commit_pending_transaction=False):
         _logger.debug("Closing store")
@@ -269,8 +269,8 @@ class KyotoCabinet(Store):
                 for i, _to_key, _from_key in self.__indices_info:
                     try:
                         i.remove(_to_key((s, p, o), ""))
-                    except self.db.DBNotFoundError, e:
-                        _logger.debug("__remove failed with %s" % e)
+                    except self.db.DBNotFoundError, e: #pragma: NO COVER
+                        _logger.debug("__remove failed with %s" % e) #pragma: NO COVER
                         pass # TODO: is it okay to ignore these?
 
     def remove(self, (subject, predicate, object), context):
@@ -321,9 +321,9 @@ class KyotoCabinet(Store):
                         self.__contexts.remove(_to_string(context))
                     # except db.DBNotFoundError, e:
                     #     pass
-                    except Exception, e:
-                        print("%s, Failed to delete %s" % (e, context))
-                        pass
+                    except Exception, e: #pragma: NO COVER
+                        print("%s, Failed to delete %s" % (e, context)) #pragma: NO COVER
+                        pass #pragma: NO COVER
             
             self.__needs_sync = needs_sync
             # self.synchronize()

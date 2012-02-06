@@ -1,13 +1,11 @@
 try:
     import kyotocabinet
 except ImportError:
-    from nose.exc import SkipTest
+    from nose import SkipTest
     raise SkipTest("KyotoCabinet not installed")
 
 import test_context
 import test_graph
-from rdflib import plugin
-from rdflib import store
 import tempfile
 from test_n3_2 import testN3Store
 

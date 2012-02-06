@@ -6,5 +6,5 @@ sys.path.insert(0, '/var/lib/tomcat6/webapps/hudson/jobs/rdfextras')
 
 plugin.register(
         'KyotoCabinet', store.Store,
-        'rdfextras.store.KyotoCabinet', 'KyotoCabinet')
+        'rdflib_kyotocabinet.KyotoCabinet', 'KyotoCabinet')
 
