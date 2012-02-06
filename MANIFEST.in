@@ -1,0 +1,4 @@
+include *.md
+recursive-include rdflib_kyotocabinet *.py
+include setup.*
+graft test
