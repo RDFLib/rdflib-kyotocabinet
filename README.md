@@ -1,8 +1,3 @@
-    SQLite store formula-aware implementation.  It stores it's triples in the following partitions:
+An adaptation of RDFLib BerkeleyDB Store’s key-value approach, using Kyoto Cabinet as a back-end.
 
-    - Asserted non rdf:type statements
-    - Asserted rdf:type statements (in a table which models Class membership)
-    The motivation for this partition is primarily query speed and scalability as most graphs will always have more rdf:type statements than others
-    - All Quoted statements
-
-    In addition it persists namespace mappings in a seperate table
+Based on an original contribution by Drew Perttula.
