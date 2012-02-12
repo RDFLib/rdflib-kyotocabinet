@@ -340,7 +340,7 @@ class KyotoCabinet(Store):
         if context is None:
             prefix = b("^")
         else:
-            prefix = bb("%s^") % self._to_string(context)
+            prefix = bb("%s^" % self._to_string(context))
         
         return len([key for key in self.__indices[0] 
                             if key.startswith(prefix)])
@@ -444,7 +444,7 @@ def to_key_func(i):
 def from_key_func(i):
     def from_key(key):
         "Takes a key; returns string"
-        parts = key.split(b("^"))
+        parts = b(key).split(b("^"))
         return parts[0], parts[(3-i+0)%3+1], \
                     parts[(3-i+1)%3+1], parts[(3-i+2)%3+1]
     
@@ -453,7 +453,7 @@ def from_key_func(i):
 def results_from_key_func(i, from_string):
     def from_key(key, subject, predicate, object, contexts_value):
         "Takes a key and subject, predicate, object; returns tuple for yield"
-        parts = key.split(b("^"))
+        parts = b(key).split(b("^"))
         if subject is None:
             # TODO: i & 1: # dis assemble and/or measure to see which is 
             # faster
