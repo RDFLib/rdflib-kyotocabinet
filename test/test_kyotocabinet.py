@@ -4,21 +4,21 @@ except ImportError:
     from nose import SkipTest
     raise SkipTest("KyotoCabinet not installed")
 
-import test_context
-import test_graph
+import context_case
+import graph_case
 import tempfile
-from test_n3_2 import testN3Store
+from n3_2_case import testN3Store
 
 storename = "KyotoCabinet"
 storetest = True
 configString = tempfile.mktemp(prefix='test',dir='/tmp')
 
-class KyotoCabinetGraphTestCase(test_graph.GraphTestCase):
+class KyotoCabinetGraphTestCase(graph_case.GraphTestCase):
     store_name = storename
     path = configString
     storetest = True
 
-class KyotoCabinetContextTestCase(test_context.ContextTestCase):
+class KyotoCabinetContextTestCase(context_case.ContextTestCase):
     store_name = storename
     path = configString
     storetest = True
