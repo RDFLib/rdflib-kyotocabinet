@@ -177,11 +177,11 @@ class KyotoCabinet(Store):
                 os.unlink(path + '/' + f)
             os.rmdir(path)
 
-    def add(self, xxx_todo_changeme, context, quoted=False):
+    def add(self, triple, context, quoted=False):
         """\
         Add a triple to the store of triples.
         """
-        (subject, predicate, object) = xxx_todo_changeme
+        (subject, predicate, object) = triple
         assert self.__open, "The Store must be open."
         assert context != self, "Can not add triple directly to store"
         # Add the triple to the Store, triggering TripleAdded events
@@ -220,8 +220,8 @@ class KyotoCabinet(Store):
             #     dbindex.synchronize()
             # self.synchronize()
 
-    def __remove(self, xxx_todo_changeme1, c, quoted=False):
-        (s, p, o) = xxx_todo_changeme1
+    def __remove(self, triple, c, quoted=False):
+        (s, p, o) = triple
         cspo, cpos, cosp = self.__indices
         contexts_value = cspo.get(b("^").join(
             [b(""), s, p, o, b("")])) or b("")
@@ -243,8 +243,8 @@ class KyotoCabinet(Store):
                             "__remove failed with %s" % e)  # pragma: NO COVER
                         pass  # TODO: is it okay to ignore these?
 
-    def remove(self, xxx_todo_changeme2, context):
-        (subject, predicate, object) = xxx_todo_changeme2
+    def remove(self, triple, context):
+        (subject, predicate, object) = triple
         assert self.__open, "The Store must be open."
         Store.remove(self, (subject, predicate, object), context)
         _to_string = self._to_string
@@ -299,9 +299,9 @@ class KyotoCabinet(Store):
             self.__needs_sync = needs_sync
             # self.synchronize()
 
-    def triples(self, xxx_todo_changeme3, context=None):
+    def triples(self, triple, context=None):
         """A generator over all the triples matching """
-        (subject, predicate, object) = xxx_todo_changeme3
+        (subject, predicate, object) = triple
         assert self.__open, "The Store must be open."
 
         if context is not None:
@@ -397,8 +397,8 @@ class KyotoCabinet(Store):
             i = i.decode()
         return i
 
-    def __lookup(self, xxx_todo_changeme4, context):
-        (subject, predicate, object) = xxx_todo_changeme4
+    def __lookup(self, triple, context):
+        (subject, predicate, object) = triple
         _to_string = self._to_string
         if context is not None:
             context = _to_string(context)
